@@ -8,8 +8,14 @@ import '../node_modules/@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
 contract Fantasy is ChainlinkClient, ConfirmedOwner {
 
   mapping(address => string) public teamOwners;
-  address[3] public topThree;
+  string[] public playersThatHaveBought;
   address public topPlayer;
+
+  using Chainlink for Chainlink.Request;
+
+  uint256 public volume;
+  bytes32 private jobId;
+  uint256 private fee;
 
   constructor()  {
         setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
@@ -17,13 +23,14 @@ contract Fantasy is ChainlinkClient, ConfirmedOwner {
         jobId = '53f9755920cd451a8fe46f5087468395';
         // https://docs.chain.link/docs/multi-variable-responses/#response-types
         // https://docs.polygon.technology/docs/develop/oracles/chainlink/
+        // https://docs.chain.link/docs/api-array-response/
         fee = (1 * LINK_DIVISIBILITY) / 10; // 0,1 * 10**18 (Varies by network and job)
     }
 
 
   function buyIn(string _teamName) external payable {
     require(msg.value == 50 ether, "Buy in is 50 MATIC");
-
+    playersThatHaveBought.push(_teamName);
     teamOwners[_teamName] = msg.sender;
   }
 
@@ -31,13 +38,28 @@ contract Fantasy is ChainlinkClient, ConfirmedOwner {
     // Get the top person in league
   }
 
-  function returnBoughtInPlayers public view returns([]) {
+  function returnBoughtInPlayers() public view returns(string[]) {
     // return array of players (string format) that have bought in
+    return playersThatHaveBought;
   }
 
   function verifyWinner(string _winner) public {
     // Must be a person who's bought in
     // If they are, requires 3 people to validate the winner is correct
+  }
+
+  function retrieveWinnings() public {
+    require(msg.sender == topPlayer);
+  }
+
+  function requestLeader() public returns (bytes32 requestId) {
+    Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
+
+    req.add('get', 'https://fantasy.premierleague.com/api/leagues-classic/583326/standings');
+
+    req.add('path', 'standings,results');
+
+    return sendChainlinkRequest(req, fee);
   }
 
 }

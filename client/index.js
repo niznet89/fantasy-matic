@@ -19,11 +19,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       })
       .then(data => {return JSON.parse(data.contents)});
 
-  const returnBoughtInPlayers = async(teamName) => {
+  const returnBoughtInPlayers = async() => {
     const defaultProvider = await ethers.getDefaultProvider();
     const fantasyContract = new ethers.Contract(address, abi, defaultProvider);
     // Hit Function to return Array of peeps who HAVE bought in
     const arrayOfBoughtIn;
+    return arrayOfBoughtIn;
+  }
+
+  function returnButtonToBuy(teamName) {
+    const arrayOfBoughtIn = returnBoughtInPlayers();
     if (arrayOfBoughtIn.includes(teamName)) {
       return "";
     } else {
@@ -49,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       <td>${i + 1}</td>
       <td>${returnFullname(testArray[i])}</td>
       <td>${testArray[i]}</td>
-      <td>${"hi"}</td>
+      <td>${returnButtonToBuy(testArray[i])}</td>
     </tr>`);
   }
 
