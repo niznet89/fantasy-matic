@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const defaultProvider = await ethers.getDefaultProvider();
     const fantasyContract = new ethers.Contract(address, abi, defaultProvider);
     // Hit Function to return Array of peeps who HAVE bought in
-    const arrayOfBoughtIn;
+    const arrayOfBoughtIn = await fantasyContract.returnBoughtInPlayers();
     return arrayOfBoughtIn;
   }
 

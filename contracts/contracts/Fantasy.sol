@@ -13,9 +13,13 @@ contract Fantasy is ChainlinkClient, ConfirmedOwner {
 
   using Chainlink for Chainlink.Request;
 
+  string public id;
+
   uint256 public volume;
   bytes32 private jobId;
   uint256 private fee;
+
+  event RequestFirstId(bytes32 indexed requestId, string id);
 
   constructor()  {
         setChainlinkToken(0x01BE23585060835E02B77ef475b0Cc51aA1e0709);
@@ -28,7 +32,7 @@ contract Fantasy is ChainlinkClient, ConfirmedOwner {
     }
 
 
-  function buyIn(string _teamName) external payable {
+  function buyIn(string memory _teamName) external payable {
     require(msg.value == 50 ether, "Buy in is 50 MATIC");
     playersThatHaveBought.push(_teamName);
     teamOwners[_teamName] = msg.sender;
@@ -57,9 +61,14 @@ contract Fantasy is ChainlinkClient, ConfirmedOwner {
 
     req.add('get', 'https://fantasy.premierleague.com/api/leagues-classic/583326/standings');
 
-    req.add('path', 'standings,results');
+    req.add('path', 'standings,results,0');
 
     return sendChainlinkRequest(req, fee);
   }
+
+  function fulfill(bytes32 _requestId, string memory _id) public recordChainlinkFulfillment(_requestId) {
+        emit RequestFirstId(_requestId, _id);
+        id = _id;
+    }
 
 }
