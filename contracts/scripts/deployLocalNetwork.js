@@ -22,7 +22,7 @@ async function main() {
 
   console.log(wallet);
 
-  const buy = await mumbai.buyIn({ value: ethers.utils.parseEther("0.1") });
+  const buy = await mumbai.buyIn({ value: ethers.utils.parseEther("1") });
 
   console.log(buy);
 

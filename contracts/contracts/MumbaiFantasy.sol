@@ -23,17 +23,17 @@ contract MumbaiFantasy is ChainlinkClient, ConfirmedOwner {
 
   constructor() ConfirmedOwner(msg.sender) {
         setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
-        setChainlinkOracle(0x1cf7D49BE7e0c6AC30dEd720623490B64F572E17);
-        jobId = 'd8fcf41ee8984d3b8b0eae7b74eca7dd';
+        setChainlinkOracle(0x58BBDbfb6fca3129b91f0DBE372098123B38B5e9);
+        jobId = 'da20aae0e4c843f6949e5cb3f7cfe8c4';
         // https://docs.chain.link/docs/multi-variable-responses/#response-types
         // https://docs.polygon.technology/docs/develop/oracles/chainlink/
         // https://docs.chain.link/docs/api-array-response/
-        fee = 10 ** 18; // 0,1 * 10**18 (Varies by network and job)
+        fee = (1 * LINK_DIVISIBILITY) / 10; // 0,1 * 10**18 (Varies by network and job)
     }
 
 
   function buyIn(string memory _teamName) external payable {
-    require(msg.value == 0.1 ether, "Buy in is 50 MATIC");
+    //require(msg.value > 0.1 ether, "Buy in is 50 MATIC");
     require(bytes(teamOwners[msg.sender]).length == 0, "You already bought in");
     playersThatHaveBought.push(_teamName);
     teamOwners[msg.sender] = _teamName;
