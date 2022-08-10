@@ -62,7 +62,7 @@ contract MumbaiFantasy is ChainlinkClient, ConfirmedOwner {
   function requestFirstId() public returns (bytes32 requestId) {
     Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
 
-    req.add('get', 'https://fantasy.premierleague.com/api/leagues-classic/583326/standings');
+    req.add('get', 'https://fantasy.premierleague.com/api/leagues-classic/583326/standings/');
 
     req.add('path', 'standings,results,0,entry_name');
 
