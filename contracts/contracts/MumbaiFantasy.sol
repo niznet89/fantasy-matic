@@ -21,20 +21,22 @@ contract MumbaiFantasy is ChainlinkClient, ConfirmedOwner {
 
   event RequestFirstId(bytes32 indexed requestId, string id);
 
+  // Chainlink Oracle testnet: 0x40193c8518BB267228Fc409a613bDbD8eC5a97b3
+  //
+
   constructor() ConfirmedOwner(msg.sender) {
         setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
-        setChainlinkOracle(0x58BBDbfb6fca3129b91f0DBE372098123B38B5e9);
-        jobId = 'da20aae0e4c843f6949e5cb3f7cfe8c4';
+        setChainlinkOracle(0x40193c8518BB267228Fc409a613bDbD8eC5a97b3);
+        jobId = '7d80a6386ef543a3abb52817f6707e3b';
         // https://docs.chain.link/docs/multi-variable-responses/#response-types
         // https://docs.polygon.technology/docs/develop/oracles/chainlink/
         // https://docs.chain.link/docs/api-array-response/
-        fee = (1 * LINK_DIVISIBILITY) / 10; // 0,1 * 10**18 (Varies by network and job)
+        fee = 0.2 * 10 ** 18; // 0,1 * 10**18 (Varies by network and job)
     }
 
 
   function buyIn(string memory _teamName) external payable {
-    //require(msg.value > 0.1 ether, "Buy in is 50 MATIC");
-    require(bytes(teamOwners[msg.sender]).length == 0, "You already bought in");
+    require(msg.value == 0.1 ether, "Buy in is 50 MATIC");
     playersThatHaveBought.push(_teamName);
     teamOwners[msg.sender] = _teamName;
   }
@@ -45,7 +47,7 @@ contract MumbaiFantasy is ChainlinkClient, ConfirmedOwner {
     return playersThatHaveBought;
   }
 
-  function verifyWinner(string memory _winner) public {
+  function verifyWinner() public {
     // Must be a person who's bought in
     // If they are, requires 3 people to validate the winner is correct
     require(bytes(teamOwners[msg.sender]).length > 0);
