@@ -1,37 +1,19 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.7;
 
-import '@chainlink/contracts/src/v0.8/ChainlinkClient.sol';
-import '@chainlink/contracts/src/v0.8/ConfirmedOwner.sol';
-
-contract MumbaiFantasy is ChainlinkClient, ConfirmedOwner {
+contract MumbaiFantasy {
 
   mapping(address => string) public teamOwners;
   string[] public playersThatHaveBought;
   string public topPlayer;
   uint public validatedWinnerCount = 0;
+  address public owner;
 
-  using Chainlink for Chainlink.Request;
-
-  string public id;
-
-  uint256 public volume;
-  bytes32 private jobId;
-  uint256 private fee;
-
-  event RequestFirstId(bytes32 indexed requestId, string id);
-
-  // Chainlink Oracle testnet: 0x40193c8518BB267228Fc409a613bDbD8eC5a97b3
-  //
-
-  constructor() ConfirmedOwner(msg.sender) {
-        setChainlinkToken(0x326C977E6efc84E512bB9C30f76E30c160eD06FB);
-        setChainlinkOracle(0x40193c8518BB267228Fc409a613bDbD8eC5a97b3);
-        jobId = '7d80a6386ef543a3abb52817f6707e3b';
-        // https://docs.chain.link/docs/multi-variable-responses/#response-types
-        // https://docs.polygon.technology/docs/develop/oracles/chainlink/
-        // https://docs.chain.link/docs/api-array-response/
-        fee = 0.2 * 10 ** 18; // 0,1 * 10**18 (Varies by network and job)
+  constructor() {
+      // https://docs.chain.link/docs/multi-variable-responses/#response-types
+      // https://docs.polygon.technology/docs/develop/oracles/chainlink/
+      // https://docs.chain.link/docs/api-array-response/
+      owner = msg.sender;
     }
 
 
@@ -61,25 +43,8 @@ contract MumbaiFantasy is ChainlinkClient, ConfirmedOwner {
     require(sent, "Failed to send MATIC");
   }
 
-  function requestFirstId() public returns (bytes32 requestId) {
-    Chainlink.Request memory req = buildChainlinkRequest(jobId, address(this), this.fulfill.selector);
-
-    req.add('get', 'https://fantasy.premierleague.com/api/leagues-classic/583326/standings/');
-
-    req.add('path', 'standings,results,0,entry_name');
-
-    return sendChainlinkRequest(req, fee);
+  function addTopPlayer(string memory _topPlayer) external {
+    topPlayer = _topPlayer;
   }
-
-  function fulfill(bytes32 _requestId, string memory _id) public recordChainlinkFulfillment(_requestId) {
-        emit RequestFirstId(_requestId, _id);
-        id = _id;
-        topPlayer = _id;
-    }
-
-  function withdrawLink() public onlyOwner {
-        LinkTokenInterface link = LinkTokenInterface(chainlinkTokenAddress());
-        require(link.transfer(msg.sender, link.balanceOf(address(this))), 'Unable to transfer');
-    }
 
 }

@@ -551,33 +551,34 @@ document.addEventListener("DOMContentLoaded", async ()=>{
     }).then((data)=>{
         return JSON.parse(data.contents);
     });
-    const returnBoughtInPlayers = async (teamName)=>{
+    const returnBoughtInPlayers = async ()=>{
         const defaultProvider = await (0, _ethers.ethers).getDefaultProvider();
         const fantasyContract = new (0, _ethers.ethers).Contract(address, abi, defaultProvider);
         // Hit Function to return Array of peeps who HAVE bought in
-        const arrayOfBoughtIn;
+        const arrayOfBoughtIn = await fantasyContract.returnBoughtInPlayers();
+        return arrayOfBoughtIn;
+    };
+    returnBoughtInPlayers();
+    const returnButtonToBuy = async (teamName)=>{
+        const arrayOfBoughtIn = returnBoughtInPlayers();
         if (arrayOfBoughtIn.includes(teamName)) return "";
         else return `<a class="btn btn-outline-danger" onClick=${clickToBuy(teamName)} href="#" role="button">Buy In</a>`;
     };
-    function clickToBuy(teamName) {
+    const clickToBuy = async (teamName)=>{
         const web3Modal = new Web3Modal();
         const connection = await web3Modal.connect();
         const provider = new (0, _ethers.ethers).providers.Web3Provider(connection);
         // Need the address for contract & ABI
         const contract = new (0, _ethers.ethers).Contract(address, abi, provider);
     // Hit contract function to deposit
-    }
-    returnBoughtInPlayers();
-    console.log(jsonObject.new_entries.results);
-    const testArray = [
-        "Put My Willian",
-        "Crunch"
-    ];
-    for(let i = 0; i < testArray.length; i++)document.getElementById("standings-table").insertAdjacentHTML("beforeend", `<tr>
+    };
+    console.log(jsonObject.standings.results);
+    const arrayOfStandings = jsonObject.standings.results;
+    for(let i = 0; i < arrayOfStandings.length; i++)document.getElementById("standings-table").insertAdjacentHTML("beforeend", `<tr>
       <td>${i + 1}</td>
-      <td>${returnFullname(testArray[i])}</td>
-      <td>${testArray[i]}</td>
-      <td>${"hi"}</td>
+      <td>${arrayOfStandings[i].player_name}</td>
+      <td>${arrayOfStandings[i].entry_name}</td>
+      <td>${returnButtonToBuy(arrayOfStandings[i])}</td>
     </tr>`);
     function returnFullname(teamName) {
         const resultsArray = jsonObject.new_entries.results;

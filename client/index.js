@@ -22,13 +22,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const returnBoughtInPlayers = async() => {
     const defaultProvider = await ethers.getDefaultProvider();
     const fantasyContract = new ethers.Contract(address, abi, defaultProvider);
+    console.log(fantasyContract);
     // Hit Function to return Array of peeps who HAVE bought in
     const arrayOfBoughtIn = await fantasyContract.returnBoughtInPlayers();
+
     return arrayOfBoughtIn;
   }
 
-  function returnButtonToBuy(teamName) {
-    const arrayOfBoughtIn = returnBoughtInPlayers();
+  const arrayOfBoughtIn = returnBoughtInPlayers();
+  console.log(arrayOfBoughtIn);
+
+  const returnButtonToBuy = async (teamName) => {
     if (arrayOfBoughtIn.includes(teamName)) {
       return "";
     } else {
@@ -36,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  function clickToBuy(teamName) {
+  const clickToBuy = async(teamName) => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -44,28 +48,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     const contract = new ethers.Contract(address, abi, provider);
     // Hit contract function to deposit
   }
-  returnBoughtInPlayers();
 
-  console.log(jsonObject.new_entries.results);
-  const testArray = ["Put My Willian", "Crunch"];
 
-  for (let i = 0; i < testArray.length; i++) {
+  console.log(jsonObject.standings.results);
+  const arrayOfStandings = jsonObject.standings.results;
+
+  for (let i = 0; i < arrayOfStandings.length; i++) {
     document.getElementById("standings-table").insertAdjacentHTML('beforeend', `<tr>
       <td>${i + 1}</td>
-      <td>${returnFullname(testArray[i])}</td>
-      <td>${testArray[i]}</td>
-      <td>${returnButtonToBuy(testArray[i])}</td>
+      <td>${arrayOfStandings[i].player_name}</td>
+      <td>${arrayOfStandings[i].entry_name}</td>
+      <td>${returnButtonToBuy(arrayOfStandings[i].entry_name)}</td>
     </tr>`);
   }
 
-  function returnFullname(teamName) {
-    const resultsArray = jsonObject.new_entries.results;
-    let fullName;
-    for (let i = 0; i < resultsArray.length; i++) {
-      if (resultsArray[i].entry_name === teamName) {
-        fullName = resultsArray[i].player_first_name + " " + resultsArray[i].player_last_name;
-      }
-    }
-    return fullName;
+  const provideTopPlayer = async()=> {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    // Need the address for contract & ABI
+    const contract = new ethers.Contract(address, abi, provider);
+    const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
   }
+});
+
+
+document.getElementByID("get-top-player").addEventListener("onClick", async () => {
+  const web3Modal = new Web3Modal();
+  const connection = await web3Modal.connect();
+  const provider = new ethers.providers.Web3Provider(connection);
+  // Need the address for contract & ABI
+  const contract = new ethers.Contract(address, abi, provider);
+  const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
 });
