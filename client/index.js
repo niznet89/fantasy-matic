@@ -32,11 +32,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   const returnButtonToBuy = (teamName) => {
-    console.log(ARRAYOFBOUGHTIN);
     if (ARRAYOFBOUGHTIN.includes(teamName)) {
       return "";
     } else {
-      return `<a class="btn btn-outline-danger" onClick=${clickToBuy(teamName)} href="#" role="button">Buy In</a>`
+      return `<a class="btn btn-outline-danger" id="${teamName.toString()}" role="button">Buy In</a>`;
     }
   }
 
@@ -46,7 +45,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const provider = new ethers.providers.Web3Provider(connection);
     // Need the address for contract & ABI
     const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
-    // Hit contract function to deposit
+    console.log(contract);
+    const buyIn = await contract.buyIn(teamName, { value: ethers.utils.parseEther("0.1") });
+
   }
 
   const arrayOfStandings = jsonObject.standings.results;
@@ -68,10 +69,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
     const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
   }
+
+  document.querySelectorAll('.btn-outline-danger').forEach(item => {
+    item.addEventListener('click', event => {
+      //handle click
+      clickToBuy(event.path[0].id);
+    })
+  })
 });
 
 
-document.getElementByID("get-top-player").addEventListener("onClick", async () => {
+document.getElementByID("get-top-player").addEventListener("click", async () => {
   const web3Modal = new Web3Modal();
   const connection = await web3Modal.connect();
   const provider = new ethers.providers.Web3Provider(connection);
