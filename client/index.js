@@ -24,11 +24,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Hit Function to return Array of peeps who HAVE bought in
     const arrayOfBoughtIn = await fantasyContract.returnBoughtInPlayers();
-    ARRAYOFBOUGHTIN = await arrayOfBoughtIn;
+    return arrayOfBoughtIn;
   }
 
-  returnBoughtInPlayers();
-  let ARRAYOFBOUGHTIN = [];
+
+  let ARRAYOFBOUGHTIN = await returnBoughtInPlayers().then((response) => {
+    return response;
+  });
 
 
   const returnButtonToBuy = (teamName) => {
@@ -44,11 +46,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     // Need the address for contract & ABI
-    const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
-    console.log(contract);
+    const contract = new ethers.Contract(address, MumbaiABI.abi, provider.getSigner());
     const buyIn = await contract.buyIn(teamName, { value: ethers.utils.parseEther("0.1") });
-
+    console.log(buyIn);
+    console.log(await buyIn.wait());
+    if(!alert("You just staked your MATIC for Bondi Sandz! Good luck with the season.")){window.location.reload();}
   }
+
 
   const arrayOfStandings = jsonObject.standings.results;
 
@@ -61,29 +65,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     </tr>`);
   }
 
-  const provideTopPlayer = async()=> {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    // Need the address for contract & ABI
-    const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
-    const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
-  }
-
   document.querySelectorAll('.btn-outline-danger').forEach(item => {
     item.addEventListener('click', event => {
       //handle click
       clickToBuy(event.path[0].id);
     })
   })
-});
 
-
-document.getElementByID("get-top-player").addEventListener("click", async () => {
-  const web3Modal = new Web3Modal();
-  const connection = await web3Modal.connect();
-  const provider = new ethers.providers.Web3Provider(connection);
-  // Need the address for contract & ABI
-  const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
-  const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
+  document.getElementById("get-top-player").addEventListener("click", async () => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    // Need the address for contract & ABI
+    const contract = new ethers.Contract(address, MumbaiABI.abi, provider.getSigner());
+    const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
+  });
 });
