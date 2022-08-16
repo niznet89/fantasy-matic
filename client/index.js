@@ -1,17 +1,16 @@
 import "./index.scss";
 import bootstrap from 'bootstrap';
 import { ethers } from "ethers";
+import MumbaiABI from "./abis/mumbai.json";
+import Web3Modal from "web3modal";
+require('dotenv').config()
 
 
 document.addEventListener("DOMContentLoaded", async () => {
   const baseURL = 'https://fantasy.premierleague.com/api/';
   const api = 'https://api.allorigins.ml/raw?url=';
+  const address = "0x4CeF4b22a1ebacE4E28c3088D8344741043E74Db";
 
-  // const doCORSRequest = async (url) => {
-  //   const response = await fetch(api + encodeURIComponent(baseURL + url));
-  //   const myJson = await response.json();
-  //   return myJson
-  // }
   const jsonObject = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://fantasy.premierleague.com/api/leagues-classic/583326/standings/')}`)
       .then(response => {
         if (response.ok) return response.json()
@@ -20,20 +19,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       .then(data => {return JSON.parse(data.contents)});
 
   const returnBoughtInPlayers = async() => {
-    const defaultProvider = await ethers.getDefaultProvider();
-    const fantasyContract = new ethers.Contract(address, abi, defaultProvider);
-    console.log(fantasyContract);
+    const provider = new ethers.providers.AlchemyProvider("maticmum", process.env.ALCHEMY_KEY);
+    const fantasyContract = new ethers.Contract(address, MumbaiABI.abi, provider);
+
     // Hit Function to return Array of peeps who HAVE bought in
     const arrayOfBoughtIn = await fantasyContract.returnBoughtInPlayers();
-
-    return arrayOfBoughtIn;
+    ARRAYOFBOUGHTIN = await arrayOfBoughtIn;
   }
 
-  const arrayOfBoughtIn = returnBoughtInPlayers();
-  console.log(arrayOfBoughtIn);
+  returnBoughtInPlayers();
+  let ARRAYOFBOUGHTIN = [];
 
-  const returnButtonToBuy = async (teamName) => {
-    if (arrayOfBoughtIn.includes(teamName)) {
+
+  const returnButtonToBuy = (teamName) => {
+    console.log(ARRAYOFBOUGHTIN);
+    if (ARRAYOFBOUGHTIN.includes(teamName)) {
       return "";
     } else {
       return `<a class="btn btn-outline-danger" onClick=${clickToBuy(teamName)} href="#" role="button">Buy In</a>`
@@ -45,12 +45,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     // Need the address for contract & ABI
-    const contract = new ethers.Contract(address, abi, provider);
+    const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
     // Hit contract function to deposit
   }
 
-
-  console.log(jsonObject.standings.results);
   const arrayOfStandings = jsonObject.standings.results;
 
   for (let i = 0; i < arrayOfStandings.length; i++) {
@@ -67,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     // Need the address for contract & ABI
-    const contract = new ethers.Contract(address, abi, provider);
+    const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
     const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
   }
 });
@@ -78,6 +76,6 @@ document.getElementByID("get-top-player").addEventListener("onClick", async () =
   const connection = await web3Modal.connect();
   const provider = new ethers.providers.Web3Provider(connection);
   // Need the address for contract & ABI
-  const contract = new ethers.Contract(address, abi, provider);
+  const contract = new ethers.Contract(address, MumbaiABI.abi, provider);
   const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
 });
