@@ -2,7 +2,8 @@
   "name": "client",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "source": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,15 +11,16 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@parcel/transformer-sass": "2.7.0",
-    "os-browserify": "^0.3.0",
-    "path-browserify": "^1.0.1",
-    "process": "^0.11.10"
+
   },
   "dependencies": {
     "bootstrap": "^5.2.0",
     "dotenv": "^16.0.1",
     "ethers": "^5.6.9",
-    "web3modal": "^1.9.8"
+    "web3modal": "^1.9.8",
+    "@parcel/transformer-sass": "2.7.0",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10"
   }
 }
