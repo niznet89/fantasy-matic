@@ -48,9 +48,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Need the address for contract & ABI
     const contract = new ethers.Contract(address, MumbaiABI.abi, provider.getSigner());
     const buyIn = await contract.buyIn(teamName, { value: ethers.utils.parseEther("0.1") });
-    console.log(buyIn);
+
     console.log(await buyIn.wait());
-    if(!alert("You just staked your MATIC for Bondi Sandz! Good luck with the season.")){window.location.reload();}
+    if(confirm("You just staked your MATIC for Bondi Sandz! Good luck with the season. Click OK to refresh screen.")){
+      window.location.reload();
+  }
   }
 
 
@@ -78,6 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const provider = new ethers.providers.Web3Provider(connection);
     // Need the address for contract & ABI
     const contract = new ethers.Contract(address, MumbaiABI.abi, provider.getSigner());
-    const updateTopPlayer = await contract.addTopPlayer(jsonObject.standings.results[0].entry_name);
+    const updateTopPlayer = await contract.requestFirstId();
+    console.log(await updateTopPlayer.wait());
   });
 });
