@@ -7,9 +7,11 @@ require('dotenv').config()
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+
   const baseURL = 'https://fantasy.premierleague.com/api/';
   const api = 'https://api.allorigins.ml/raw?url=';
-  const address = "0xB44f03Da01848b585B3C2e43FFeb905A98998ED8";
+  const address = "0xeFB5aea1c874230cb5bA011A7644bCE0EFFCadc3";
+  const web3Modal = new Web3Modal();
 
   const jsonObject = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://fantasy.premierleague.com/api/leagues-classic/583326/standings/')}`)
       .then(response => {
@@ -42,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const clickToBuy = async(teamName) => {
-    const web3Modal = new Web3Modal();
+
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     // Need the address for contract & ABI
@@ -75,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   })
 
   document.getElementById("get-top-player").addEventListener("click", async () => {
-    const web3Modal = new Web3Modal();
+
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     // Need the address for contract & ABI
@@ -83,4 +85,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateTopPlayer = await contract.requestFirstId();
     console.log(await updateTopPlayer.wait());
   });
+
+  document.getElementById("confirm-winner").addEventListener("click", async () => {
+
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    // Need the address for contract & ABI
+    const contract = new ethers.Contract(address, MumbaiABI.abi, provider.getSigner());
+    const updateTopPlayer = await contract.verifyWinner();
+    console.log(await updateTopPlayer.wait());
+  });
+
+  document.getElementById("claim-winnings").addEventListener("click", async () => {
+
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    // Need the address for contract & ABI
+    const contract = new ethers.Contract(address, MumbaiABI.abi, provider.getSigner());
+    const updateTopPlayer = await contract.retrieveWinnings();
+    console.log(await updateTopPlayer.wait());
+  });
+
 });
