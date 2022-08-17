@@ -9,7 +9,7 @@ require('dotenv').config()
 document.addEventListener("DOMContentLoaded", async () => {
   const baseURL = 'https://fantasy.premierleague.com/api/';
   const api = 'https://api.allorigins.ml/raw?url=';
-  const address = "0x4CeF4b22a1ebacE4E28c3088D8344741043E74Db";
+  const address = "0xB44f03Da01848b585B3C2e43FFeb905A98998ED8";
 
   const jsonObject = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://fantasy.premierleague.com/api/leagues-classic/583326/standings/')}`)
       .then(response => {
