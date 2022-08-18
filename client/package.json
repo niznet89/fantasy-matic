@@ -6,7 +6,7 @@
   "source": "index.html",
   "scripts": {
     "start": "parcel",
-    "build": "npx parcel build"
+    "build": "parcel build"
   },
   "keywords": [],
   "author": "",
