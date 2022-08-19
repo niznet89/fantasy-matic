@@ -2,7 +2,6 @@
   "name": "client",
   "version": "1.0.0",
   "description": "",
-
   "source": "index.html",
   "scripts": {
     "start": "parcel",
@@ -11,18 +10,17 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "dependencies": {
+    "@parcel/transformer-sass": "2.7.0",
+    "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.2.0",
     "dotenv": "^16.0.1",
     "ethers": "^5.6.9",
-    "web3modal": "^1.9.8",
-    "@parcel/transformer-sass": "2.7.0",
     "os-browserify": "^0.3.0",
+    "parcel": "^2.0.0",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
-    "parcel": "^2.0.0"
+    "web3modal": "^1.9.8"
   }
 }
