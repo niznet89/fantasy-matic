@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const baseURL = 'https://fantasy.premierleague.com/api/';
   const api = 'https://api.allorigins.ml/raw?url=';
-  const address = "0xeFB5aea1c874230cb5bA011A7644bCE0EFFCadc3";
+  const address = "0x322b7a32d7A4AEC72676990CD5c50b30EAFAdABC";
   const web3Modal = new Web3Modal();
 
   const jsonObject = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://fantasy.premierleague.com/api/leagues-classic/583326/standings/')}`)
@@ -106,5 +106,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const updateTopPlayer = await contract.retrieveWinnings();
     console.log(await updateTopPlayer.wait());
   });
+
+  const getFrontEndData = async () => {
+    const provider = new ethers.providers.AlchemyProvider("maticmum", process.env.ALCHEMY_KEY);
+    const fantasyContract = new ethers.Contract(address, MumbaiABI.abi, provider);
+
+    const frontEndData = await fantasyContract.frontEndData();
+
+    document.getElementById("sc-data").insertAdjacentHTML('beforeend', `<p>
+      Season Winner: ${frontEndData[2]} <br>
+      LINK in contract: ${ethers.utils.formatEther(frontEndData[0])} <br>
+      MATIC in contract: ${ethers.utils.formatEther(frontEndData[1])}
+    </p>`);
+
+
+  };
+  getFrontEndData();
 
 });
