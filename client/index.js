@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       <td>${i + 1}</td>
       <td>${arrayOfStandings[i].player_name}</td>
       <td>${arrayOfStandings[i].entry_name}</td>
+      <td>${arrayOfStandings[i].total}</td>
       <td>${returnButtonToBuy(arrayOfStandings[i].entry_name)}</td>
     </tr>`);
   }

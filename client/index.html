@@ -50,17 +50,28 @@
           <div class="accordion-item">
             <h2 class="accordion-header" id="flush-headingTwo">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                Accordion Item #2
+                What happens once the season has ended?
               </button>
             </h2>
             <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-              <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+              <div class="accordion-body">
+                <p>
+                  The new Queen/King has been crowned! What to do next?<br><br>
+
+                  1. Hit the ‘Get League Winner’ button. This will interact with the Smart Contract to get the winning team (which has their address/wallet tied to the name)<br><br>
+                  2. Once that transaction has settled, there will need to be THREE people to confirm that they are indeed the winner (to prevent fraud). The three people MUST be addresses/wallets that bought in and can include the person that won.<br><br>
+                  3. Once at least 3 people have confirmed the winner, the Champ can hit the ‘Claim Winnings’ button and they’ll get the pot of MATIC sent straight to their wallet!<br><br><br>
+
+                  Side (technical) note: The 'Get League Winner' button uses an Oracle (Chainlink) to hit the Premier League API which grabs the winner. This costs LINK (0.1 per request). <br> As there is limited LINK in the contract please only hit this button at the end of season.<br>
+                  It also resets the count of people who have verified the winner to zero.
+                </p>
+              </div>
             </div>
           </div>
           <div class="accordion-item">
             <h2 class="accordion-header" id="flush-headingThree">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                Accordion Item #3
+                Smart Contract Data (Winner, Total Value of MATIC/LINK in contract)
               </button>
             </h2>
             <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
@@ -75,6 +86,7 @@
             <th>Standings</th>
             <th>Manager</th>
             <th>Team Name</th>
+            <th>Total Points</th>
             <th>Actions</th>
           </tr>
         </table>
